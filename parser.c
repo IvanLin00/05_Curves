@@ -148,6 +148,29 @@ void parse_file ( char * filename,
       ident(transform);
     }//end ident
 
+    else if(strcmp(line, "circle") == 0){
+      // circle: add a circle to the edge matrix -
+      // takes 4 arguments (cx, cy, cz, r)
+      fgets(line, sizeof(line), f);
+      double cx0, cy0, cz0, r;
+      sscanf(line, "%lf %lf %lf %lf", &cx0, &cy0, &cz0, &r);
+      add_circle(edges, cx0, cy0, cz0, r, 0.001);
+    }
+
+    else if(strcmp(line, "bezier") == 0){
+      fgets(line, sizeof(line), f);
+      double x0, y0, x1, y1, x2, y2, x3, y3;
+      sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf", &x0, &y0, &x1, &y1, &x2, &y2, &x3, &y3);
+      add_curve(edges, x0, y0, x1, y1, x2, y2, x3, y3, 0.001, BEZIER);
+    }
+
+    else if(strcmp(line, "hermite") == 0){
+      fgets(line, sizeof(line), f);
+      double x0, y0, x1, y1, rx0, ry0, rx1, ry1;
+      sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf", &x0, &y0, &x1, &y1, &rx0, &ry0, &rx1, &ry1);
+      add_curve(edges, x0, y0, x1, y1, rx0, ry0, rx1, ry1, 0.001, HERMITE);
+    }
+
     else if ( strncmp(line, "apply", strlen(line)) == 0 ) {
       //printf("APPLY\t%s", line);
       matrix_mult(transform, edges);
